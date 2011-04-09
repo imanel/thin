@@ -6,6 +6,7 @@ require 'forwardable'
 require 'openssl'
 require 'eventmachine'
 require 'rack'
+require 'http_parser.rb'
 
 module Thin
   ROOT = File.expand_path(File.dirname(__FILE__))
@@ -13,6 +14,7 @@ module Thin
   autoload :Command,            "#{ROOT}/thin/command"
   autoload :Connection,         "#{ROOT}/thin/connection"
   autoload :Daemonizable,       "#{ROOT}/thin/daemonizing"
+  autoload :HttpParser,         "#{ROOT}/thin/http_parser"
   autoload :Logging,            "#{ROOT}/thin/logging"
   autoload :Headers,            "#{ROOT}/thin/headers"
   autoload :Request,            "#{ROOT}/thin/request"
@@ -38,14 +40,6 @@ end
 require "#{Thin::ROOT}/thin/version"
 require "#{Thin::ROOT}/thin/statuses"
 require "#{Thin::ROOT}/rack/adapter/loader"
-
-if Thin.win?
-  # Select proper binary under Windows
-  major_ruby_version = RUBY_VERSION[/^(\d+\.\d+)/]
-  require "#{Thin::ROOT}/#{major_ruby_version}/thin_parser"
-else
-  require "#{Thin::ROOT}/thin_parser"
-end
 
 module Rack
   module Adapter
